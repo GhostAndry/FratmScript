@@ -12,7 +12,7 @@
 
 ```bash
 # Clona il repository
-git clone https://github.com/tuousername/FratmScript.git
+git clone https://github.com/GhostAndry/FratmScript.git
 cd FratmScript
 
 # Rendi eseguibile il CLI
