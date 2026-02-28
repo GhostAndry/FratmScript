@@ -1,0 +1,81 @@
+// ============================================
+// FratmScript - 'A Smorfia Napulitana 🎰
+// Usa 'a Smorfia built-in pe' giucà 'o lotto!
+// ============================================
+
+scerm.scriv("🎰 'A SMORFIA NAPULITANA 'O FRATMSCRIPT! 🤌\n")
+
+// ---- Che significato tene nu nummero? ----
+scerm.scriv("--- Che significano 'sti nummeri? ---\n")
+
+scerm.scriv(`  47 = ${Smorfia.che(47)}`)
+scerm.scriv(`  77 = ${Smorfia.che(77)}`)
+scerm.scriv(`  13 = ${Smorfia.che(13)}`)
+scerm.scriv(`  42 = ${Smorfia.che(42)}`)
+scerm.scriv(`  75 = ${Smorfia.che(75)}`)
+scerm.scriv(`  17 = ${Smorfia.che(17)}`)
+scerm.scriv(`  90 = ${Smorfia.che(90)}`)
+
+// ---- Informazioni complete ----
+scerm.scriv("\n--- Informazioni complete ---\n")
+
+fisso info = Smorfia.nummero(48)
+scerm.scriv(`Nummero: ${info.nummero}`)
+scerm.scriv(`Significato: ${info.significato}`)
+scerm.scriv(`Descrizione: ${info.descrizione}`)
+
+// ---- Cerca dint''a Smorfia ----
+scerm.scriv("\n--- Cerca 'muorto' dint''a Smorfia ---\n")
+
+fisso risultati = Smorfia.cerca("muorto")
+risultati.ogniuno(funzion(r) {
+  scerm.scriv(`  ${r.nummero} = ${r.significato}`)
+})
+
+// ---- Cerca 'femmena' ----
+scerm.scriv("\n--- Cerca 'femmena' ---\n")
+
+fisso femmine = Smorfia.cerca("femmena")
+femmine.ogniuno(funzion(r) {
+  scerm.scriv(`  ${r.nummero} = ${r.significato}`)
+})
+
+// ---- Nummero a caso ----
+scerm.scriv("\n--- Nummero a caso ---\n")
+
+fisso fortunato = Smorfia.random()
+scerm.scriv(`  🎲 ${fortunato.nummero} = ${fortunato.significato}`)
+
+// ---- Gioca 'o Lotto! ----
+scerm.scriv("\n--- Giucamme 'o Lotto! 🎰 ---")
+
+fisso biglietto = Smorfia.gioca()
+Smorfia.stampaBiglietto(biglietto)
+
+// ---- Interpreta nu suonno ----
+scerm.scriv("--- Interpreta nu suonno 🌙 ---\n")
+
+fisso sogno = "Ho sognato mia mamma con i fiori nella chiesa"
+scerm.scriv(`Sogno: "${sogno}"\n`)
+scerm.scriv("Numeri da giocare:")
+
+fisso numeriSogno = Smorfia.interpretaSogno(sogno)
+si (numeriSogno.lunghezza > 0) {
+  numeriSogno.ogniuno(funzion(r) {
+    scerm.scriv(`  🔮 ${r.nummero} = ${r.significato} (parola: "${r.parolaChiave}")`)
+  })
+} sinnò {
+  scerm.scriv("  Nessun numero trovato... prova n'ato suonno!")
+}
+
+// ---- Alcuni numeri famosi ----
+scerm.scriv("\n--- 'E nummeri cchiù famosi ---\n")
+
+fisso famosi = [1, 8, 13, 17, 25, 33, 47, 48, 75, 77, 90]
+famosi.ogniuno(funzion(n) {
+  fisso s = Smorfia.nummero(n)
+  fisso pad = n < 10 ? " " : ""
+  scerm.scriv(`  ${pad}${s.nummero}. ${s.significato}  —  ${s.descrizione}`)
+})
+
+scerm.scriv("\n✅ 'A Smorfia funziona! Bona fortuna, fratm! 🤌🎰")

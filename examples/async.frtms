@@ -1,0 +1,55 @@
+// ============================================
+// FratmScript - Async/Await 🕐
+// Programmazione asincrona in napoletano!
+// ============================================
+
+scerm.scriv("🕐 Async/Await 'o napulitan!\n")
+
+// Funzione che simula un'attesa (come aspettare la pizza al forno)
+funzion aspettaUnPò(ms) {
+  torna nuov Promessa(funzion(resolve) {
+    dopp(resolve, ms)
+  })
+}
+
+// Funzione asincrona per preparare una pizza
+lent funzion preparaPizza(tipo) {
+  scerm.scriv(`🍕 Inizio a preparare: ${tipo}...`)
+  
+  scerm.scriv(`  📦 Preparo l'impasto...`)
+  aspett aspettaUnPò(100)
+  
+  scerm.scriv(`  🧀 Metto la mozzarella...`)
+  aspett aspettaUnPò(100)
+  
+  scerm.scriv(`  🔥 Inforno a 400°C...`)
+  aspett aspettaUnPò(200)
+  
+  scerm.scriv(`  ✅ ${tipo} pronta!`)
+  torna tipo
+}
+
+// Funzione principale asincrona
+lent funzion pizzeria() {
+  scerm.scriv("🏪 La pizzeria è aperta!\n")
+  
+  // Prepara le pizze una alla volta
+  fisso pizza1 = aspett preparaPizza("Margherita")
+  scerm.scriv("")
+  
+  fisso pizza2 = aspett preparaPizza("Marinara")
+  scerm.scriv("")
+  
+  fisso pizza3 = aspett preparaPizza("Diavola")
+  scerm.scriv("")
+  
+  // Tutte le pizze sono pronte!
+  fisso ordine = [pizza1, pizza2, pizza3]
+  scerm.scriv(`📋 Ordine completo: ${ordine.unisci(", ")}`)
+  scerm.scriv("\n🎉 Tutte le pizze sono pronte! Buon appetito! 🤌")
+}
+
+// Avvia la pizzeria!
+pizzeria().pò(funzion() {
+  scerm.scriv("\n✅ Async/Await funziona! Uè! 🤌")
+})

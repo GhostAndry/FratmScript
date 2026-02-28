@@ -1,0 +1,53 @@
+// ============================================
+// FratmScript - Error Handling 🛡️
+// Gestione errori in napoletano!
+// ============================================
+
+scerm.scriv("🛡️ Gestione Errori 'o napulitan!\n")
+
+// Try-Catch in napoletano
+scerm.scriv("--- Test 1: Prova/Piglia ---")
+prova {
+  scerm.scriv("Provo a fare qualcosa di rischioso...")
+  jett nuov Guaio("Mamma mia! Qualcosa è andato storto!")
+} piglia(errore) {
+  scerm.scriv(`Piglia! Ho acchiappato l'errore: ${errore.message}`)
+} allafin {
+  scerm.scriv("Alla fine... si fa sempre tutto! 💪")
+}
+
+// Funzione con validazione
+scerm.scriv("\n--- Test 2: Validazione ---")
+
+funzion dividi(a, b) {
+  si (b === 0) {
+    jett nuov Guaio("Uè! Nun se po' dividere pe zero!")
+  }
+  torna a / b
+}
+
+prova {
+  scerm.scriv(`10 / 2 = ${dividi(10, 2)}`)
+  scerm.scriv(`10 / 0 = ${dividi(10, 0)}`)  // Questo lancia un errore!
+} piglia(e) {
+  scerm.scriv(`Errore: ${e.message}`)
+}
+
+// Errore personalizzato
+scerm.scriv("\n--- Test 3: Errore personalizzato ---")
+
+famiglia ErroreNapoletano vien_ra Guaio {
+  constructor(messaggio, codice) {
+    papà(messaggio)
+    chest.nome = "ErroreNapoletano"
+    chest.codice = codice
+  }
+}
+
+prova {
+  jett nuov ErroreNapoletano("'A pizza s'è bruciata!", 404)
+} piglia(e) {
+  scerm.scriv(`${e.nome} [${e.codice}]: ${e.message}`)
+}
+
+scerm.scriv("\n✅ Error handling funziona! Uè! 🤌")

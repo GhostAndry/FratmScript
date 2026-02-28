@@ -1,0 +1,54 @@
+// ============================================
+// FratmScript - Fibonacci 🔢
+// Calcolo della sequenza di Fibonacci
+// ============================================
+
+scerm.scriv("🔢 Sequenza di Fibonacci 'o napulitan!\n")
+
+// Funzione Fibonacci ricorsiva
+funzion fibonacci(n) {
+  si (n <= 0) torna 0
+  si (n === 1) torna 1
+  torna fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+// Stampa i primi 15 numeri di Fibonacci
+scerm.scriv("Fibonacci ricorsivo:")
+pe (mett i = 0; i < 15; i++) {
+  scerm.scriv(`  F(${i}) = ${fibonacci(i)}`)
+}
+
+// Versione iterativa (più veloce!)
+funzion fibonacciVeloce(n) {
+  si (n <= 0) torna 0
+  si (n === 1) torna 1
+
+  mett a = 0
+  mett b = 1
+  
+  pe (mett i = 2; i <= n; i++) {
+    mett temp = a + b
+    a = b
+    b = temp
+  }
+  
+  torna b
+}
+
+scerm.scriv("\nFibonacci veloce (iterativo):")
+pe (mett i = 0; i <= 20; i++) {
+  scerm.scriv(`  F(${i}) = ${fibonacciVeloce(i)}`)
+}
+
+// FizzBuzz napoletano!
+scerm.scriv("\n🍕 FizzBuzz 'o napulitan!\n")
+
+pe (mett i = 1; i <= 30; i++) {
+  mett risultato = ""
+  si (i % 3 === 0) risultato += "Pizza"
+  si (i % 5 === 0) risultato += "Babà"
+  si (risultato === "") risultato = i
+  scerm.scriv(`  ${i}: ${risultato}`)
+}
+
+scerm.scriv("\n✅ Fatto! 🤌")

@@ -1,0 +1,36 @@
+{
+  "name": "fratmscript",
+  "version": "1.0.0",
+  "description": "FratmScript - JavaScript 'o napulitan! 🤌 Un linguaggio di programmazione basato su JavaScript ma con sintassi in napoletano.",
+  "main": "src/index.js",
+  "bin": {
+    "fratmscript": "./bin/fratmscript",
+    "frtms": "./bin/fratmscript"
+  },
+  "scripts": {
+    "start": "node bin/fratmscript",
+    "test": "node bin/fratmscript examples/ciao_mondo.frtms",
+    "test:all": "node bin/fratmscript examples/ciao_mondo.frtms && node bin/fratmscript examples/fibonacci.frtms && node bin/fratmscript examples/classe.frtms"
+  },
+  "keywords": [
+    "fratmscript",
+    "javascript",
+    "napoletano",
+    "napoli",
+    "transpiler",
+    "programming-language",
+    "dialect",
+    "italian"
+  ],
+  "author": "Andrea Ronzoni",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "examples/",
+    "README.md"
+  ]
+}

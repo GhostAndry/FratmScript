@@ -1,0 +1,113 @@
+.// ============================================
+// FratmScript - Classi e OOP 🏛️
+// Programmazione ad oggetti in napoletano!
+// ============================================
+
+scerm.scriv("🏛️ Classi 'o napulitan!\n")
+
+// Classe base: Persona
+famiglia Persona {
+  constructor(nome, cognome, età) {
+    chest.nome = nome
+    chest.cognome = cognome
+    chest.età = età
+  }
+
+  saluta() {
+    scerm.scriv(`Uè! Me chiamo ${chest.nome} ${chest.cognome}, tengo ${chest.età} anni!`)
+  }
+
+  nomeCompleto() {
+    torna `${chest.nome} ${chest.cognome}`
+  }
+}
+
+// Classe derivata: Pizzaiolo
+famiglia Pizzaiolo vien_ra Persona {
+  constructor(nome, cognome, età, specialità) {
+    papà(nome, cognome, età)
+    chest.specialità = specialità
+    chest.pizzeFatte = 0
+  }
+
+  faiPizza(tipo) {
+    chest.pizzeFatte++
+    scerm.scriv(`🍕 ${chest.nome} sta facendo una ${tipo}! (Pizza #${chest.pizzeFatte})`)
+    torna tipo
+  }
+
+  saluta() {
+    papà.saluta()  // Chiama il metodo del papà (super)
+    scerm.scriv(`  So' pizzaiolo, la mia specialità è: ${chest.specialità}`)
+    scerm.scriv(`  Aggio fatto ${chest.pizzeFatte} pizze oggi!`)
+  }
+}
+
+// Classe derivata: Calciatore
+famiglia Calciatore vien_ra Persona {
+  constructor(nome, cognome, età, squadra, ruolo) {
+    papà(nome, cognome, età)
+    chest.squadra = squadra
+    chest.ruolo = ruolo
+    chest.gol = 0
+  }
+
+  segna() {
+    chest.gol++
+    scerm.scriv(`⚽ GOOOL! ${chest.nome} ha segnato! (${chest.gol} gol totali)`)
+  }
+
+  saluta() {
+    papà.saluta()
+    scerm.scriv(`  Gioco nel ${chest.squadra} come ${chest.ruolo}`)
+    scerm.scriv(`  Gol segnati: ${chest.gol}`)
+  }
+}
+
+// ---- Creiamo gli oggetti ----
+scerm.scriv("--- Creazione personaggi ---\n")
+
+fisso gennaro = nuov Pizzaiolo("Gennaro", "Esposito", 45, "Margherita DOC")
+fisso diego = nuov Calciatore("Diego", "Maradona", 25, "SSC Napoli", "Attaccante")
+fisso sophia = nuov Persona("Sophia", "Loren", 30)
+
+// Saluti
+sophia.saluta()
+scerm.scriv("")
+
+gennaro.saluta()
+scerm.scriv("")
+
+// Gennaro fa delle pizze
+gennaro.faiPizza("Margherita")
+gennaro.faiPizza("Marinara")
+gennaro.faiPizza("Diavola")
+scerm.scriv("")
+
+gennaro.saluta()
+scerm.scriv("")
+
+// Diego segna!
+diego.segna()
+diego.segna()
+diego.segna()
+scerm.scriv("")
+diego.saluta()
+
+// ---- Array di persone con metodi ----
+scerm.scriv("\n--- Lista del quartiere ---\n")
+
+fisso quartiere = [sophia, gennaro, diego]
+
+quartiere.ogniuno(funzion(persona) {
+  scerm.scriv(`👤 ${persona.nomeCompleto()} - ${persona.età} anni`)
+})
+
+// Filtra per età
+scerm.scriv("\nPersone con più di 30 anni:")
+fisso grandi = quartiere.filtra(funzion(p) { torna p.età > 30 })
+grandi.ogniuno(funzion(p) {
+  scerm.scriv(`  - ${p.nomeCompleto()}`)
+})
+
+scerm.scriv("\n✅ OOP funziona! Uè! 🤌")

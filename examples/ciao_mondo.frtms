@@ -1,0 +1,46 @@
+// ============================================
+// FratmScript - Ciao Mondo! 🤌
+// Il primo programma in napoletano!
+// ============================================
+
+// Stampa un saluto a schermo
+scerm.scriv("Uè! Ciao Mondo! 🤌🍕")
+
+// Variabili in napoletano
+mett nome = "Gennaro"
+mett cognome = "Esposito"
+fisso citta = "Napoli"
+
+scerm.scriv(`Me chiamo ${nome} ${cognome} e so' 'e ${citta}!`)
+
+// Numeri e operazioni
+mett età = 30
+mett annoProssimo = età + 1
+scerm.scriv(`Tengo ${età} anni, l'anno che vene ne tengo ${annoProssimo}`)
+
+// Array (Lista)
+mett pizze = ["Margherita", "Marinara", "Diavola", "Quattro Stagioni", "Capricciosa"]
+scerm.scriv("Le pizze bbuone:")
+pizze.ogniuno(funzion(pizza, i) {
+  scerm.scriv(`  ${i + 1}. ${pizza}`)
+})
+
+// Oggetto
+mett persona = {
+  nome: "Totò",
+  cognome: "De Curtis",
+  mestiere: "Artista",
+  città: "Napoli"
+}
+
+scerm.scriv(`\n${persona.nome} ${persona.cognome} - ${persona.mestiere} 'e ${persona.città}`)
+
+// Condizioni
+mett fame = overo
+si (fame) {
+  scerm.scriv("\nTengo famm! Jammece a piglià na pizza! 🍕")
+} sinnò {
+  scerm.scriv("\nSo' sazio, grazie!")
+}
+
+scerm.scriv("\n✅ FratmScript funziona! Uè! 🤌")

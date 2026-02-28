@@ -1,0 +1,261 @@
+#!/usr/bin/env node
+
+// ============================================
+// FratmScript CLI
+// JavaScript 'o napulitan! 🤌
+// ============================================
+
+const path = require('path');
+const fs = require('fs');
+const FratmScript = require('../src/index');
+const { ERROR_MESSAGES } = require('../src/keywords');
+
+// ---- Colori per il terminale ----
+const colors = {
+  reset:   '\x1b[0m',
+  bright:  '\x1b[1m',
+  red:     '\x1b[31m',
+  green:   '\x1b[32m',
+  yellow:  '\x1b[33m',
+  blue:    '\x1b[34m',
+  magenta: '\x1b[35m',
+  cyan:    '\x1b[36m',
+  white:   '\x1b[37m',
+};
+
+// ---- Banner ----
+const BANNER = `
+${colors.green}${colors.bright}
+  ╔═══════════════════════════════════════════════════════╗
+  ║                                                       ║
+  ║   🤌  FratmScript v1.0.0                              ║
+  ║       JavaScript 'o napulitan!                         ║
+  ║                                                       ║
+  ║   "Scerm.scriv('Uè, ciao mondo!')"                   ║
+  ║                                                       ║
+  ╚═══════════════════════════════════════════════════════╝
+${colors.reset}`;
+
+// ---- Help ----
+const HELP = `
+${colors.cyan}${colors.bright}USO:${colors.reset}
+  fratmscript ${colors.yellow}<file.frtms>${colors.reset}     Esegui un file FratmScript
+  fratmscript ${colors.yellow}--transpila <file.frtms>${colors.reset}  Transpila in JS senza eseguire
+  fratmscript ${colors.yellow}--debug <file.frtms>${colors.reset}      Esegui con output di debug
+  fratmscript ${colors.yellow}--repl${colors.reset}                    Modalità interattiva (REPL)
+
+${colors.cyan}${colors.bright}OPZIONI:${colors.reset}
+  ${colors.yellow}-v, --versione${colors.reset}    Mostra la versione
+  ${colors.yellow}-h, --aiuto${colors.reset}       Mostra questo messaggio
+  ${colors.yellow}-t, --transpila${colors.reset}   Solo transpila, non eseguire
+  ${colors.yellow}-d, --debug${colors.reset}       Modalità debug
+  ${colors.yellow}-o, --output${colors.reset}      File di output per transpilazione
+
+${colors.cyan}${colors.bright}ESEMPI:${colors.reset}
+  fratmscript ciao_mondo.frtms
+  fratmscript --transpila programma.frtms -o output.js
+  fratmscript --debug test.frtms
+  frtms ciao_mondo.frtms  ${colors.magenta}(alias corto!)${colors.reset}
+
+${colors.cyan}${colors.bright}INFO:${colors.reset}
+  Estensione file: ${colors.yellow}.frtms${colors.reset}
+  Documentazione:  ${colors.yellow}README.md${colors.reset}
+`;
+
+// ---- Parsing degli argomenti ----
+function parseArgs(argv) {
+  const args = {
+    file: null,
+    transpileOnly: false,
+    debug: false,
+    output: null,
+    repl: false,
+    showHelp: false,
+    showVersion: false,
+  };
+
+  const rawArgs = argv.slice(2); // Salta node e script path
+
+  for (let i = 0; i < rawArgs.length; i++) {
+    const arg = rawArgs[i];
+
+    switch (arg) {
+      case '-h':
+      case '--aiuto':
+      case '--help':
+        args.showHelp = true;
+        break;
+      case '-v':
+      case '--versione':
+      case '--version':
+        args.showVersion = true;
+        break;
+      case '-t':
+      case '--transpila':
+      case '--transpile':
+        args.transpileOnly = true;
+        break;
+      case '-d':
+      case '--debug':
+        args.debug = true;
+        break;
+      case '-o':
+      case '--output':
+        args.output = rawArgs[++i];
+        break;
+      case '--repl':
+        args.repl = true;
+        break;
+      default:
+        if (!arg.startsWith('-')) {
+          args.file = arg;
+        }
+        break;
+    }
+  }
+
+  return args;
+}
+
+// ---- REPL Interattivo ----
+function startREPL(fratm) {
+  const readline = require('readline');
+  
+  console.log(BANNER);
+  console.log(`${colors.green}Modalità interattiva - Scrivi codice FratmScript!${colors.reset}`);
+  console.log(`${colors.yellow}Scrivi "esci" o premi Ctrl+C per uscire.${colors.reset}`);
+  console.log(`${colors.yellow}Scrivi "js" per vedere il JavaScript generato dall'ultimo comando.${colors.reset}\n`);
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt: `${colors.green}fratm>${colors.reset} `,
+  });
+
+  let lastTranspiled = '';
+  let multilineBuffer = '';
+  let braceDepth = 0;
+
+  rl.prompt();
+
+  rl.on('line', (line) => {
+    const trimmed = line.trim();
+
+    // Comandi speciali
+    if (trimmed === 'esci' || trimmed === 'exit') {
+      console.log(`\n${colors.yellow}Uè, a' prossima! 👋🤌${colors.reset}\n`);
+      process.exit(0);
+    }
+
+    if (trimmed === 'js') {
+      if (lastTranspiled) {
+        console.log(`${colors.cyan}--- JavaScript generato ---${colors.reset}`);
+        console.log(lastTranspiled);
+        console.log(`${colors.cyan}---------------------------${colors.reset}`);
+      } else {
+        console.log(`${colors.yellow}Nessun codice ancora tradotto.${colors.reset}`);
+      }
+      rl.prompt();
+      return;
+    }
+
+    if (trimmed === 'aiuto' || trimmed === 'help') {
+      console.log(HELP);
+      rl.prompt();
+      return;
+    }
+
+    // Gestione multiline (se ci sono parentesi graffe aperte)
+    multilineBuffer += (multilineBuffer ? '\n' : '') + line;
+    braceDepth += (line.match(/\{/g) || []).length;
+    braceDepth -= (line.match(/\}/g) || []).length;
+
+    if (braceDepth > 0) {
+      // Ancora dentro un blocco, aspetta altre righe
+      process.stdout.write(`${colors.yellow}...>${colors.reset} `);
+      return;
+    }
+
+    const code = multilineBuffer;
+    multilineBuffer = '';
+    braceDepth = 0;
+
+    try {
+      lastTranspiled = fratm.transpile(code);
+      const result = fratm.run(code);
+      if (result !== undefined) {
+        console.log(`${colors.cyan}← ${result}${colors.reset}`);
+      }
+    } catch (error) {
+      console.error(`${colors.red}🔴 ${error.message}${colors.reset}`);
+    }
+
+    rl.prompt();
+  });
+
+  rl.on('close', () => {
+    console.log(`\n${colors.yellow}Uè, a' prossima! 👋🤌${colors.reset}\n`);
+    process.exit(0);
+  });
+}
+
+// ---- Main ----
+function main() {
+  const args = parseArgs(process.argv);
+
+  // Mostra versione
+  if (args.showVersion) {
+    console.log(ERROR_MESSAGES.version);
+    process.exit(0);
+  }
+
+  // Mostra help
+  if (args.showHelp) {
+    console.log(BANNER);
+    console.log(HELP);
+    process.exit(0);
+  }
+
+  // Crea l'istanza FratmScript
+  const fratm = new FratmScript({ debug: args.debug });
+
+  // Modalità REPL
+  if (args.repl || !args.file) {
+    if (!args.file) {
+      startREPL(fratm);
+      return;
+    }
+  }
+
+  // Controlla che il file esista
+  const filePath = path.resolve(args.file);
+  if (!fs.existsSync(filePath)) {
+    console.error(`${colors.red}🔴 ${ERROR_MESSAGES.fileNotFound}${filePath}${colors.reset}`);
+    process.exit(1);
+  }
+
+  // Controlla l'estensione
+  if (!filePath.endsWith('.frtms')) {
+    console.error(`${colors.red}🔴 ${ERROR_MESSAGES.wrongExtension}${colors.reset}`);
+    process.exit(1);
+  }
+
+  try {
+    if (args.transpileOnly) {
+      // Solo transpila
+      const outputPath = fratm.transpileFile(filePath, args.output);
+      console.log(`${colors.green}✅ Transpilato! Output: ${outputPath}${colors.reset}`);
+    } else {
+      // Esegui il file
+      fratm.runFile(filePath);
+    }
+  } catch (error) {
+    console.error(`${colors.red}🔴 ${error.message}${colors.reset}`);
+    if (args.debug && error.stack) {
+      console.error(`${colors.yellow}${error.stack}${colors.reset}`);
+    }
+    process.exit(1);
+  }
+}
+
+main();
