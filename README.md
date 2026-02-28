@@ -304,8 +304,3 @@ Vuoi aggiungere nuove parole napoletane? Modifica [src/keywords.js](src/keywords
 MIT - Fai chello che vuò! 🤌
 
 ---
-
-<p align="center">
-  <b>Fatto cu ❤️ a Napoli</b><br>
-  <i>"'A programmazione è comm' 'a pizza: a meglio è chella napulitana!"</i>
-</p>
